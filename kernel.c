@@ -115,4 +115,5 @@ void kernel_main() {
   for(i = 0; i < 100; i++) {
 	  terminal_writestring("Hello world\n");
   }
+
 }
