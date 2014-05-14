@@ -88,18 +88,17 @@ void terminal_putchar(char c) {
   }
   else {
 	  terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-  }
 
-	if ( ++terminal_column == VGA_WIDTH ) {
-		terminal_column = 0;
-		if ( ++terminal_row == VGA_HEIGHT ) {
-			terminal_row = 0;
-		}
-	}
+    if ( ++terminal_column == VGA_WIDTH ) {
+		  terminal_column = 0;
+      if ( ++terminal_row == VGA_HEIGHT ) {
+			  terminal_row = 0;
+		  }
+	  }
+  }
 }
 
-void terminal_writestring(const char* data)
-{
+void terminal_writestring(const char* data) {
 	size_t datalen = strlen(data);
 	for ( size_t i = 0; i < datalen; i++ )
 		terminal_putchar(data[i]);
@@ -108,8 +107,7 @@ void terminal_writestring(const char* data)
 #if defined(__cplusplus)
 extern "C" /* Use C linkage for kernel_main. */
 #endif
-void kernel_main()
-{
+void kernel_main() {
 	terminal_initialize();
 	/* Since there is no support for newlines in terminal_putchar yet, \n will
 	   produce some VGA specific character instead. This is normal. */
