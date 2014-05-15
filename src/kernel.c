@@ -6,12 +6,11 @@
 
 /* Check if the compiler thinks if we are targeting the wrong operating system. */
 #if defined(__linux__)
-#error "You are not using a cross-compiler, you will most certainly run into trouble"
+#error "wah"
 #endif
 
-/* This tutorial will only work for the 32-bit ix86 targets. */
 #if !defined(__i386__)
-#error "This tutorial needs to be compiled with a ix86-elf compiler"
+#error "wah"
 #endif
 
 /* Hardware text mode color constants. */
@@ -60,12 +59,13 @@ uint8_t terminal_color;
 uint16_t* terminal_buffer;
 
 void terminal_initialize() {
+  size_t x,y;
   terminal_row = 0;
   terminal_column = 0;
   terminal_color = make_color(COLOR_LIGHT_GREY, COLOR_BLACK);
   terminal_buffer = (uint16_t*) 0xB8000;
-  for ( size_t y = 0; y < VGA_HEIGHT; y++ ) {
-    for ( size_t x = 0; x < VGA_WIDTH; x++ ) {
+  for ( y = 0; y < VGA_HEIGHT; y++ ) {
+    for ( x = 0; x < VGA_WIDTH; x++ ) {
       const size_t index = y * VGA_WIDTH + x;
       terminal_buffer[index] = make_vgaentry(' ', terminal_color);
     }
@@ -100,7 +100,8 @@ void terminal_putchar(char c) {
 
 void terminal_writestring(const char* data) {
   size_t datalen = strlen(data);
-  for ( size_t i = 0; i < datalen; i++ )
+  size_t i;
+  for ( i = 0; i < datalen; i++ )
     terminal_putchar(data[i]);
 }
 
