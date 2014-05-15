@@ -104,15 +104,20 @@ void terminal_writestring(const char* data) {
     terminal_putchar(data[i]);
 }
 
+void gdt_install();
+
 #if defined(__cplusplus)
 extern "C" /* Use C linkage for kernel_main. */
 #endif
 void kernel_main() {
+
   terminal_initialize();
+  gdt_install();
+
   /* Since there is no support for newlines in terminal_putchar yet, \n will
      produce some VGA specific character instead. This is normal. */
   int i = 0;
   for(i = 0; i < 100; i++) {
-    terminal_writestring("Hello world\n");
+    terminal_writestring("Hello worlds\n");
   }
 }
