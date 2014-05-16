@@ -1,4 +1,4 @@
-#include <io.h>
+#include "io.h"
 
 size_t terminal_row;
 size_t terminal_column;
@@ -14,7 +14,6 @@ void io_initialize() {
 
   for(y = 0; y < VGA_HEIGHT; y++) {
     for(x = 0; x < VGA_WIDTH; x++) {
-      const size_t index = y * VGA_WIDTH + x;
       terminal_buffer[y * VGA_WIDTH + x] = ((uint16_t)' ') | ((uint16_t)terminal_color) << 8;
     }
   }
@@ -25,7 +24,7 @@ void io_putc(char c) {
     terminal_row++;
     terminal_column = 0;
   } else {
-    terminal_buffer[terminal_column * VGA_WIDTH + terminal_row] = ((uint16_t)c) | ((uint16_t)terminal_color) << 8;
+    terminal_buffer[terminal_row * VGA_WIDTH + terminal_column] = ((uint16_t)c) | ((uint16_t)terminal_color) << 8;
     if(++terminal_column == VGA_WIDTH) {
       terminal_column = 0;
       if(++terminal_row == VGA_HEIGHT) {
@@ -36,9 +35,8 @@ void io_putc(char c) {
 }
 
 void io_printf(const char *s, ...) {
-  io_putc('t');
-  io_putc('e');
-  io_putc('s');
-  io_putc('t');
-  io_putc('\n');
+  while(*s != '\0') {
+    io_putc(*s);
+    s++;
+  }
 }

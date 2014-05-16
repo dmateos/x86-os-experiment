@@ -17,9 +17,12 @@
 extern "C" /* Use C linkage for kernel_main. */
 #endif
 
+#include "io.h"
+
 void kernel_main() {
   //gdt_install();
   io_initialize();
 
-  io_printf();
+  io_printf("hello world\n");
+  io_printf("i am an os");
 }

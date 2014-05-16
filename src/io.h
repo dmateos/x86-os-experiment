@@ -1,3 +1,9 @@
+#ifndef _IO_H_
+#define _IO_H_
+
+#include <stdint.h>
+#include <stddef.h>
+
 enum vga_color {
   COLOR_BLACK = 0,
   COLOR_BLUE = 1,
@@ -21,6 +27,7 @@ static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
 
 void io_initialize();
-void ip_putc();
-void io_printf();
+void ip_putc(char c);
+void io_printf(const char *s, ...);
 
+#endif
