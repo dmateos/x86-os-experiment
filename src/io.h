@@ -27,7 +27,7 @@ static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
 
 void io_initialize();
-void ip_putc(char c);
+void io_putc(char c);
 void io_printf(const char *s, ...);
 
 #endif
