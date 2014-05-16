@@ -19,3 +19,8 @@ enum vga_color {
 
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
+
+void io_initialize();
+void ip_putc();
+void io_printf();
+
