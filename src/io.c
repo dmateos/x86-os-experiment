@@ -5,11 +5,46 @@ size_t terminal_column;
 uint8_t terminal_color;
 uint16_t *terminal_buffer;
 
+size_t strlen(char s[]) {
+  int i = 0;
+  while(*s++ != '\0')
+    i++;
+  return i;
+}
+
+void reverse(char s[]) {
+  int i, j;
+  char tmp;
+
+  for(i = 0, j = strlen(s)-1; i < j; i++, j--) {
+    tmp = s[i];
+    s[i] = s[j];
+    s[j] = tmp;
+  }
+}
+
+void itoa(int n, char s[]) {
+  int i, sign;
+  if((sign = n) < 0) {
+    n = -n;
+  }
+  i = 0;
+  do {
+    s[i++] = n % 10 + '0';
+  } while((n /= 10) > 0);
+
+  if(sign < 0) {
+    s[i++] = '-';
+  }
+  s[i] = '\0';
+  reverse(s);
+}
+
 void io_initialize() {
   size_t x,y;
   terminal_row = 0;
   terminal_column = 0;
-  terminal_color = COLOR_WHITE | COLOR_BLACK << 4;
+  terminal_color = COLOR_LIGHT_GREY | COLOR_BLACK << 4;
   terminal_buffer = (uint16_t*) 0xB8000;
 
   for(y = 0; y < VGA_HEIGHT; y++) {
@@ -35,8 +70,24 @@ void io_putc(char c) {
 }
 
 void io_printf(const char *s, ...) {
+  int ival;
+  char ibuf[32];
+  va_list args;
+  va_start(args, *s);
+
   while(*s != '\0') {
-    io_putc(*s);
+    if(*s == '%') {
+      s++;
+     switch(*s) {
+      case 'd':
+        ival = va_arg(args, int);
+        itoa(ival, ibuf);
+        io_printf(ibuf);
+        break;
+     }
+    } else {
+      io_putc(*s);
+    }
     s++;
   }
 }

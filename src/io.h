@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdarg.h>
 
 enum vga_color {
   COLOR_BLACK = 0,

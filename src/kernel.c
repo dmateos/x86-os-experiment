@@ -13,16 +13,15 @@
 #error "wah"
 #endif
 
-#if defined(__cplusplus)
-extern "C" /* Use C linkage for kernel_main. */
-#endif
-
 #include "io.h"
 
-void kernel_main() {
-  //gdt_install();
-  io_initialize();
+void gdt_install();
 
-  io_printf("hello world\n");
-  io_printf("i am an os");
+void kernel_main() {
+  io_initialize();
+  gdt_install();
+
+  io_printf("hello world!! %d %d\n", 1337, 1338);
+  while(true) {
+  }
 }
