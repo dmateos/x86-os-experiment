@@ -14,8 +14,7 @@
 #endif
 
 #include "io.h"
-
-void gdt_install();
+#include "gdt.h"
 
 void kernel_main() {
   io_initialize();

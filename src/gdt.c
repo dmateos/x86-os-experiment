@@ -17,6 +17,8 @@ void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned cha
   io_printf("gdt set gate\n");
 }
 
+extern void gdt_flush();
+
 void gdt_install() {
   io_printf("installing gdt table\n");
 
@@ -24,18 +26,8 @@ void gdt_install() {
   gp.base = (unsigned int)&gdt;
 
   gdt_set_gate(0, 0, 0, 0, 0);
-  gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
-  gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
+  gdt_set_gate(1, 0x0, 0xFFFFFFFF, 0x9A, 0xCF);
+  gdt_set_gate(2, 0x0, 0xFFFFFFFF, 0x92, 0xCF);
 
-  /* load the gdtr registry */
-  asm("lgdtl (gp)");
-
-  /* initiliaz the segments */
-  asm("   movw $0x10, %ax    \n \
-          movw %ax, %ds    \n \
-          movw %ax, %es    \n \
-          movw %ax, %fs    \n \
-          movw %ax, %gs    \n \
-          ljmp $0x08, $next    \n \
-          next:        \n");
+  gdt_flush();
 }

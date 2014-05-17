@@ -16,6 +16,7 @@ stack_bottom:
 stack_top:
 
 .section .text
+
 .global _start
 .type _start, @function
 _start:
@@ -25,3 +26,17 @@ _start:
 	hlt
 .Lhang:
 	jmp .Lhang
+
+ .global gdt_flush
+gdt_flush:
+  lgdtl gp
+  movw $0x10, %ax
+  movw %ax, %ds
+  movw %ax, %es
+  movw %ax, %fs
+  movw %ax, %gs
+  ljmp $0x08, $next
+next:
+  ret
+
+ 
