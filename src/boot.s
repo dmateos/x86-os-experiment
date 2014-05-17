@@ -20,12 +20,12 @@ stack_top:
 .global _start
 .type _start, @function
 _start:
-	movl $stack_top, %esp
-	call kernel_main
-	cli
-	hlt
+  movl $stack_top, %esp
+  call kernel_main
+  cli
+  hlt
 .Lhang:
-	jmp .Lhang
+  jmp .Lhang
 
 .global gdt_flush
 gdt_flush:
