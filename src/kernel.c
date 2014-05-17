@@ -21,7 +21,7 @@ void kernel_main() {
   io_initialize();
   gdt_install();
 
-  io_printf("hello world!! %d %d\n", 1337, 1338);
+  io_printf("hello world!! %d\n", strlen("hello"));
   while(true) {
   }
 }
