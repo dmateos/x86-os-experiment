@@ -27,7 +27,7 @@ _start:
 .Lhang:
 	jmp .Lhang
 
- .global gdt_flush
+.global gdt_flush
 gdt_flush:
   lgdtl gp
   movw $0x10, %ax
