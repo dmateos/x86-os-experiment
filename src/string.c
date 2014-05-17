@@ -18,19 +18,26 @@ void reverse(char s[]) {
   }
 }
 
-void itoa(int n, char s[]) {
-  int i, sign;
-  if((sign = n) < 0) {
-    n = -n;
-  }
-  i = 0;
-  do {
-    s[i++] = n % 10 + '0';
-  } while((n /= 10) > 0);
+void itoa(int value, char* result, int base) {
+  // check that the base if valid
+  if (base < 2 || base > 36) { *result = '\0'; return; }
 
-  if(sign < 0) {
-    s[i++] = '-';
+    char* ptr = result, *ptr1 = result, tmp_char;
+    int tmp_value;
+
+  do {
+    tmp_value = value;
+    value /= base;
+    *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz" [35 + (tmp_value - value * base)];
+  } while ( value );
+
+  // Apply negative sign
+  if (tmp_value < 0) *ptr++ = '-';
+    *ptr-- = '\0';
+  while(ptr1 < ptr) {
+    tmp_char = *ptr;
+    *ptr--= *ptr1;
+    *ptr1++ = tmp_char;
   }
-  s[i] = '\0';
-  reverse(s);
 }
+

@@ -6,6 +6,6 @@
 
 size_t strlen(char s[]);
 void reverse(char s[]);
-void itoa(int n, char s[]);
+void itoa(int n, char*, int base);
 
 #endif

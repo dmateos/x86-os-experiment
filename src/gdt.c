@@ -1,16 +1,4 @@
-struct gdt_entry {
-  unsigned short limit_low;
-  unsigned short base_low;
-  unsigned char base_middle;
-  unsigned char access;
-  unsigned char granularity;
-  unsigned char base_high;
-} __attribute__((packed));
-
-struct gdt_ptr {
-  unsigned short limit;
-  unsigned int base;
-} __attribute__((packed));
+#include "gdt.h"
 
 struct gdt_entry gdt[3];
 struct gdt_ptr gp;
@@ -25,9 +13,13 @@ void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned cha
 
   gdt[num].granularity |= (gran & 0xF0);
   gdt[num].access = access;
+
+  io_printf("gdt set gate\n");
 }
 
 void gdt_install() {
+  io_printf("installing gdt table\n");
+
   gp.limit = (sizeof(struct gdt_entry) * 3) -1;
   gp.base = (unsigned int)&gdt;
 

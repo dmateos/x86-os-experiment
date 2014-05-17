@@ -46,7 +46,13 @@ void io_printf(const char *s, ...) {
      switch(*s) {
       case 'd':
         ival = va_arg(args, int);
-        itoa(ival, ibuf);
+        itoa(ival, ibuf, 10);
+        io_printf(ibuf);
+        break;
+      case 'h':
+        ival = va_arg(args, int);
+        itoa(ival, ibuf, 16);
+        io_printf("0x");
         io_printf(ibuf);
         break;
      }
