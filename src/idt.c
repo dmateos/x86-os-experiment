@@ -15,7 +15,7 @@ extern void idt_load();
 
 void idt_install() {
   idtp.limit = (sizeof (struct idt_entry) * 256) - 1;
-  idtp.base = (unsigned int)&idt;
+  idtp.base = (uint32_t)&idt;
   
   idt_set_gate(0, (uint32_t)isr0, 0x08, 0x8E);
   idt_set_gate(1, (uint32_t)isr1, 0x08, 0x8E);
@@ -53,6 +53,11 @@ void idt_install() {
   idt_load();
 }
 
-void isr_handler() {
-  io_printf("handled interupt!");
+void isr_handler(struct registers r) {
+  switch(r.int_no) {
+    case 0x03:
+      io_printf("caught you\n");
+      break;
+  }
+  io_printf("handled interupt! %h\n", r.int_no);
 }

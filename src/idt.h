@@ -14,8 +14,15 @@ struct idt_entry {
 
 struct idt_ptr {
   uint16_t limit;
-  uint16_t base;
+  uint32_t base;
 } __attribute__((packed));
+
+struct registers {
+  uint32_t ds;                  // Data segment selector
+  uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax; // Pushed by pusha.
+  uint32_t int_no, err_code;    // Interrupt number and error code (if applicable)
+  uint32_t eip, cs, eflags, useresp, ss; // Pushed by the processor automatically.
+};
 
 void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags);
 void idt_install();
