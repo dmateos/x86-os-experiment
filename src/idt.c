@@ -9,8 +9,6 @@ void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
   idt[num].sel = sel;
   idt[num].always0 = 0;
   idt[num].flags = flags;
-
-  io_printf("idt set gate\n");
 }
 
 extern void idt_load();
@@ -53,4 +51,8 @@ void idt_install() {
   idt_set_gate(31, (uint32_t)isr31, 0x08, 0x8E);
 
   idt_load();
+}
+
+void isr_handler() {
+  io_printf("handled interupt!");
 }

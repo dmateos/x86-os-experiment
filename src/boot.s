@@ -62,7 +62,28 @@ idt_load:
 .endm
 
 isr_common_stub:
-  ret
+  pusha           # Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
+  movw %ax, %ds    # Lower 16-bits of eax = ds.
+  push %eax       # Save the data segment descriptor
+
+  movw $0x10, %ax  # load the kernel data segment descriptor
+  movw %ax, %ds
+  movw %ax, %es
+  movw %ax, %fs
+  movw %ax, %gs
+  
+  call isr_handler
+
+  pop %eax        # reload the original data segment descriptor
+  movw %ax, %ds
+  movw %ax, %es
+  movw %ax, %fs
+  movw %ax, %gs
+ 
+  popa            # Pops edi,esi,ebp...
+  add %esp, 8     # Cleans up the pushed error code and pushed ISR number
+  sti
+  iret            # pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
 
 isr_noerrorcode 0
 isr_noerrorcode 1 

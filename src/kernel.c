@@ -25,6 +25,10 @@ void kernel_main() {
 
   io_printf("hello world!! %d\n", strlen("hello world!"));
   io_printf("hello world!! %h\n", strlen("hello world!"));
+
+  //asm volatile ("int $0x3");
+  //asm volatile ("int $0x4");
+
   while(true) {
   }
 }
