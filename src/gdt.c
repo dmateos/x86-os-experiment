@@ -3,7 +3,7 @@
 struct gdt_entry gdt[5];
 struct gdt_ptr gp;
 
-void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran) {
+void gdt_set_gate(int32_t num, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran) {
   gdt[num].base_low = (base & 0xFFFF);
   gdt[num].base_middle = (base >> 16) & 0xFF;
   gdt[num].base_high = (base >> 24) & 0xFF;
@@ -19,7 +19,7 @@ void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned cha
 
 extern void gdt_flush();
 
-void gdt_install() {
+void gdt_initialize() {
   io_printf("installing gdt table\n");
 
   gp.limit = (sizeof(struct gdt_entry) * 5) -1;

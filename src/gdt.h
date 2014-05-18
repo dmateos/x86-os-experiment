@@ -18,7 +18,7 @@ struct gdt_ptr {
   uint32_t base;
 } __attribute__((packed));
 
-void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran);
-void gdt_install();
+void gdt_set_gate(int32_t num, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran);
+void gdt_initialize();
 
 #endif

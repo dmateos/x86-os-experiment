@@ -15,10 +15,13 @@
 
 #include "io.h"
 #include "gdt.h"
+#include "idt.h"
 
 void kernel_main() {
   io_initialize();
-  gdt_install();
+
+  gdt_initialize();
+  idt_install();
 
   io_printf("hello world!! %d\n", strlen("hello world!"));
   io_printf("hello world!! %h\n", strlen("hello world!"));

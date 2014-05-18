@@ -16,4 +16,7 @@ struct idt_ptr {
   uint16_t base;
 } __attribute__((packed));
 
+void idt_set_gate();
+void idt_install();
+
 #endif
