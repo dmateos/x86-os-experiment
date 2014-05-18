@@ -1,6 +1,6 @@
 #include "gdt.h"
 
-struct gdt_entry gdt[3];
+struct gdt_entry gdt[5];
 struct gdt_ptr gp;
 
 void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran) {
@@ -22,12 +22,14 @@ extern void gdt_flush();
 void gdt_install() {
   io_printf("installing gdt table\n");
 
-  gp.limit = (sizeof(struct gdt_entry) * 3) -1;
+  gp.limit = (sizeof(struct gdt_entry) * 5) -1;
   gp.base = (unsigned int)&gdt;
 
   gdt_set_gate(0, 0, 0, 0, 0);
   gdt_set_gate(1, 0x0, 0xFFFFFFFF, 0x9A, 0xCF);
   gdt_set_gate(2, 0x0, 0xFFFFFFFF, 0x92, 0xCF);
+  gdt_set_gate(3, 0x0, 0xFFFFFFFF, 0xFA, 0xCF);
+  gdt_set_gate(4, 0x0, 0xFFFFFFFF, 0xF2, 0xCF);
 
   gdt_flush();
 }
