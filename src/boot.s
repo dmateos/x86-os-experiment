@@ -49,12 +49,38 @@ idt_load:
   lidt idtp
   ret
 
+# The above interupt methods call this method which sets up state and calls our 
+# handler which is also defined in C
+isr_common_stub:
+  pusha           # Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
+  mov %ds, %ax    # Lower 16-bits of eax = ds.
+  push %eax       # Save the data segment descriptor
+
+  mov $0x10, %ax  # load the kernel data segment descriptor
+  mov %ax, %ds
+  mov %ax, %es
+  mov %ax, %fs
+  mov %ax, %gs
+
+  call isr_handler
+
+  pop %eax        # reload the original data segment descriptor
+  mov %ax, %ds
+  mov %ax, %es
+  mov %ax, %fs
+  mov %ax, %gs
+
+  popa            # Pops edi,esi,ebp...
+  add $8, %esp     # Cleans up the pushed error code and pushed ISR number
+  sti
+  iret            # pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
+
 # These two macros help us setup the interupt tables
 .macro isr_errorcode num=0
   .global isr\num
   isr\num:
     cli
-    push \num
+    push $\num
     jmp isr_common_stub
 .endm
 
@@ -62,8 +88,8 @@ idt_load:
   .global isr\num
   isr\num:
     cli
-    push 0
-    push \num
+    push $0
+    push $\num
     jmp isr_common_stub
 .endm
 
@@ -101,31 +127,5 @@ isr_noerrorcode 28
 isr_noerrorcode 29
 isr_noerrorcode 30
 isr_noerrorcode 31
-
-# The above interupt methods call this method which sets up state and calls our 
-# handler which is also defined in C
-isr_common_stub:
-  pusha           # Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
-  movw %ax, %ds    # Lower 16-bits of eax = ds.
-  push %eax       # Save the data segment descriptor
-
-  movw $0x10, %ax  # load the kernel data segment descriptor
-  movw %ax, %ds
-  movw %ax, %es
-  movw %ax, %fs
-  movw %ax, %gs
-
-  call isr_handler
-
-  pop %eax        # reload the original data segment descriptor
-  movw %ax, %ds
-  movw %ax, %es
-  movw %ax, %fs
-  movw %ax, %gs
-
-  popa            # Pops edi,esi,ebp...
-  add 8, %esp     # Cleans up the pushed error code and pushed ISR number
-  sti
-  iret            # pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
 
 

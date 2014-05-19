@@ -14,9 +14,11 @@ void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
 extern void idt_load();
 
 void idt_install() {
+  io_printf("installing idt table\n");
+
   idtp.limit = (sizeof (struct idt_entry) * 256) - 1;
   idtp.base = (uint32_t)&idt;
-  
+
   idt_set_gate(0, (uint32_t)isr0, 0x08, 0x8E);
   idt_set_gate(1, (uint32_t)isr1, 0x08, 0x8E);
   idt_set_gate(2, (uint32_t)isr2, 0x08, 0x8E);
@@ -50,14 +52,20 @@ void idt_install() {
   idt_set_gate(30, (uint32_t)isr30, 0x08, 0x8E);
   idt_set_gate(31, (uint32_t)isr31, 0x08, 0x8E);
 
+  io_printf("idt set gates 0-31\n");
   idt_load();
 }
 
 void isr_handler(struct registers r) {
+  io_printf("handled interupt! %h\n", r.int_no);
+  
   switch(r.int_no) {
     case 0x03:
-      io_printf("caught you\n");
+      io_printf("breakpoint exception, error: %h\n", r.err_code);
+      break;
+    case 0xd:
+      io_printf("general protection fault, error: %h\n", r.err_code);
       break;
   }
-  io_printf("handled interupt! %h\n", r.int_no);
 }
+

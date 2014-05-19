@@ -23,10 +23,7 @@ void kernel_main() {
   gdt_initialize();
   idt_install();
 
-  io_printf("hello world!! %h\n", strlen("hello world!"));
-
   asm volatile ("int $0x3");
-  //asm volatile ("int $0x4");
 
   while(true) {
   }
