@@ -56,19 +56,19 @@ isr_common_stub:
   mov %ds, %ax    # Lower 16-bits of eax = ds.
   push %eax       # Save the data segment descriptor
 
-  mov $0x10, %ax  # load the kernel data segment descriptor
-  mov %ax, %ds
-  mov %ax, %es
-  mov %ax, %fs
-  mov %ax, %gs
+  movw $0x10, %ax  # load the kernel data segment descriptor
+  movw %ax, %ds
+  movw %ax, %es
+  movw %ax, %fs
+  movw %ax, %gs
 
   call isr_handler
 
   pop %eax        # reload the original data segment descriptor
-  mov %ax, %ds
-  mov %ax, %es
-  mov %ax, %fs
-  mov %ax, %gs
+  movw %ax, %ds
+  movw %ax, %es
+  movw %ax, %fs
+  movw %ax, %gs
 
   popa            # Pops edi,esi,ebp...
   add $8, %esp     # Cleans up the pushed error code and pushed ISR number

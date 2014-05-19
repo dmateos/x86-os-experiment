@@ -63,6 +63,9 @@ void isr_handler(struct registers r) {
     case 0x03:
       io_printf("breakpoint exception, error: %h\n", r.err_code);
       break;
+    case 0x08:
+      io_printf("double fault, error: %h\n", r.err_code);
+      break;
     case 0xd:
       io_printf("general protection fault, error: %h\n", r.err_code);
       break;

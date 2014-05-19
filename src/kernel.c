@@ -1,16 +1,13 @@
-#if !defined(__cplusplus)
-#include <stdbool.h> /* C doesn't have booleans by default. */
-#endif
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
-/* Check if the compiler thinks if we are targeting the wrong operating system. */
 #if defined(__linux__)
-#error "wah"
+#error "use a cross compiler"
 #endif
 
 #if !defined(__i386__)
-#error "wah"
+#error "this is a 32bit kernel atm"
 #endif
 
 #include "io.h"
