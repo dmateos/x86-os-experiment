@@ -10,7 +10,7 @@
 .long FLAGS
 .long CHECKSUM
 
-#Setup a stack
+# Setup a stack
 .section .bootstrap_stack, "aw", @nobits
 stack_bottom:
 .skip 16384 # 16 KiB
@@ -21,9 +21,9 @@ stack_top:
 .global _start
 .type _start, @function
 _start:
-  movl $stack_top, %esp
-  call kernel_main
   cli
+  #movl $stack_top, %esp
+  call kernel_main
   hlt
 .Lhang:
   jmp .Lhang
@@ -40,7 +40,6 @@ gdt_flush:
   movw %ax, %gs
   ljmp $0x08, $next
 next:
-  ret
 
 # Function to flush the IDT table once we setup the data as required
 # in C
@@ -53,25 +52,26 @@ idt_load:
 # handler which is also defined in C
 isr_common_stub:
   pusha           # Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
-  movw %ds, %ax    # Lower 16-bits of eax = ds.
-  pushl %eax       # Save the data segment descriptor
 
-  movw $0x10, %ax  # load the kernel data segment descriptor
-  movw %ax, %ds
-  movw %ax, %es
-  movw %ax, %fs
-  movw %ax, %gs
+  mov %ds, %ax    # Lower 16-bits of eax = ds.
+  push %eax       # Save the data segment descriptor
+
+  mov $0x10, %ax  # load the kernel data segment descriptor
+  mov %ax, %ds
+  mov %ax, %es
+  mov %ax, %fs
+  mov %ax, %gs
 
   call isr_handler
 
-  popl %eax        # reload the original data segment descriptor
-  movw %ax, %ds
-  movw %ax, %es
-  movw %ax, %fs
-  movw %ax, %gs
+  pop %eax
+  #mov %ax, %ds
+  #mov %ax, %es
+  #mov %ax, %fs
+  #mov %ax, %gs
 
   popa            # Pops edi,esi,ebp...
-  addl $8, %esp     # Cleans up the pushed error code and pushed ISR number
+  add $8, %esp     # Cleans up the pushed error code and pushed ISR number
   sti
   iret            # pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
 

@@ -20,8 +20,12 @@ void kernel_main() {
   idt_initialize();
 
   asm volatile ("int $0x3");
+  asm volatile ("int $0x3");
   asm volatile ("int $0x4");
 
+  io_printf("hello world\n");
+
   while(true) {
+
   }
 }
