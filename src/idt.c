@@ -13,7 +13,7 @@ void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
 
 extern void idt_load();
 
-void idt_install() {
+void idt_initialize() {
   io_printf("installing idt table\n");
 
   idtp.limit = (sizeof (struct idt_entry) * 256) - 1;

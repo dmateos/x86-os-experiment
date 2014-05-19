@@ -25,7 +25,7 @@ struct registers {
 };
 
 void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags);
-void idt_install();
+void idt_initialize();
 
 extern void isr0();
 extern void isr1();
@@ -59,6 +59,5 @@ extern void isr28();
 extern void isr29();
 extern void isr30();
 extern void isr31();
-
 
 #endif

@@ -16,9 +16,8 @@
 
 void kernel_main() {
   io_initialize();
-
   gdt_initialize();
-  idt_install();
+  idt_initialize();
 
   asm volatile ("int $0x3");
 
