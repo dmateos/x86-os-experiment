@@ -103,7 +103,29 @@ isr_common_stub:
 .endm
 
 irq_command_stub:
-  ret
+  pusha           # Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
+
+  mov %ds, %ax    # Lower 16-bits of eax = ds.
+  push %eax       # Save the data segment descriptor
+
+  mov $0x10, %ax  # load the kernel data segment descriptor
+  mov %ax, %ds
+  mov %ax, %es
+  mov %ax, %fs
+  mov %ax, %gs
+
+  call irq_handler
+
+  pop %eax
+  #mov %ax, %ds
+  #mov %ax, %es
+  #mov %ax, %fs
+  #mov %ax, %gs
+
+  popa            # Pops edi,esi,ebp...
+  add $8, %esp     # Cleans up the pushed error code and pushed ISR number
+  sti
+  iret            # pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
 
 # Use the above macros to generate a bunch of isr methods, one for each
 # interrupt

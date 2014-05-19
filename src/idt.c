@@ -11,8 +11,6 @@ void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
   idt[num].flags = flags;
 }
 
-extern void idt_load();
-
 void idt_initialize() {
 
   io_printf("remapping irqs\n");
@@ -105,3 +103,20 @@ void isr_handler(struct registers r) {
   }
 }
 
+isr_t interrupt_handlers[256];
+
+void irq_handler(struct registers regs) {
+  if(regs.int_no >= 40) {
+    outb(0xa0, 0x20);
+  }
+  outb(0x20, 0x20);
+
+  if(interrupt_handlers[regs.int_no] != 0) {
+    isr_t handler = interrupt_handlers[regs.int_no];
+    handler(regs);
+  }
+}
+
+void register_interrupt_handler(uint8_t n, isr_t handler) {
+  interrupt_handlers[n] = handler;
+}

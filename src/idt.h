@@ -26,6 +26,14 @@ struct registers {
 
 void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags);
 void idt_initialize();
+void isr_handler();
+void irq_handler();
+
+typedef void (*isr_t)(struct registers);
+
+void register_interrupt_handler(uint8_t n, isr_t handler);
+
+extern void idt_load();
 
 extern void isr0();
 extern void isr1();
