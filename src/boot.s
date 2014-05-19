@@ -10,13 +10,14 @@
 .long FLAGS
 .long CHECKSUM
 
+#Setup a stack
 .section .bootstrap_stack, "aw", @nobits
 stack_bottom:
 .skip 16384 # 16 KiB
 stack_top:
 
 .section .text
-
+# Our linker script jumps to start
 .global _start
 .type _start, @function
 _start:
@@ -27,6 +28,8 @@ _start:
 .Lhang:
   jmp .Lhang
 
+# Function to flush the GDT table once we setup the data as required
+# in C
 .global gdt_flush
 gdt_flush:
   lgdtl gp
@@ -39,11 +42,14 @@ gdt_flush:
 next:
   ret
 
+# Function to flush the IDT table once we setup the data as required
+# in C
 .global idt_load
 idt_load:
   lidt idtp
-  ret 
+  ret
 
+# These two macros help us setup the interupt tables
 .macro isr_errorcode num=0
   .global isr\num
   isr\num:
@@ -61,41 +67,19 @@ idt_load:
     jmp isr_common_stub
 .endm
 
-isr_common_stub:
-  pusha           # Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
-  movw %ax, %ds    # Lower 16-bits of eax = ds.
-  push %eax       # Save the data segment descriptor
-
-  movw $0x10, %ax  # load the kernel data segment descriptor
-  movw %ax, %ds
-  movw %ax, %es
-  movw %ax, %fs
-  movw %ax, %gs
-  
-  call isr_handler
-
-  pop %eax        # reload the original data segment descriptor
-  movw %ax, %ds
-  movw %ax, %es
-  movw %ax, %fs
-  movw %ax, %gs
- 
-  popa            # Pops edi,esi,ebp...
-  add 8, %esp     # Cleans up the pushed error code and pushed ISR number
-  sti
-  iret            # pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
-
+# Use the above macros to generate a bunch of isr methods, one for each
+# interrupt
 isr_noerrorcode 0
-isr_noerrorcode 1 
+isr_noerrorcode 1
 isr_noerrorcode 2
-isr_noerrorcode 3 
-isr_noerrorcode 4 
-isr_noerrorcode 5 
-isr_noerrorcode 6 
-isr_noerrorcode 7 
-isr_errorcode 8 
-isr_noerrorcode 9 
-isr_errorcode 10 
+isr_noerrorcode 3
+isr_noerrorcode 4
+isr_noerrorcode 5
+isr_noerrorcode 6
+isr_noerrorcode 7
+isr_errorcode 8
+isr_noerrorcode 9
+isr_errorcode 10
 isr_errorcode 11
 isr_errorcode 12
 isr_errorcode 13
@@ -117,3 +101,31 @@ isr_noerrorcode 28
 isr_noerrorcode 29
 isr_noerrorcode 30
 isr_noerrorcode 31
+
+# The above interupt methods call this method which sets up state and calls our 
+# handler which is also defined in C
+isr_common_stub:
+  pusha           # Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
+  movw %ax, %ds    # Lower 16-bits of eax = ds.
+  push %eax       # Save the data segment descriptor
+
+  movw $0x10, %ax  # load the kernel data segment descriptor
+  movw %ax, %ds
+  movw %ax, %es
+  movw %ax, %fs
+  movw %ax, %gs
+
+  call isr_handler
+
+  pop %eax        # reload the original data segment descriptor
+  movw %ax, %ds
+  movw %ax, %es
+  movw %ax, %fs
+  movw %ax, %gs
+
+  popa            # Pops edi,esi,ebp...
+  add 8, %esp     # Cleans up the pushed error code and pushed ISR number
+  sti
+  iret            # pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
+
+
