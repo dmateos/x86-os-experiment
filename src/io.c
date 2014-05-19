@@ -23,6 +23,8 @@ void io_putc(char c) {
   if(c == '\n') {
     terminal_row++;
     terminal_column = 0;
+  } else if(c == '\r') {
+    terminal_column = 0;
   } else {
     terminal_buffer[terminal_row * VGA_WIDTH + terminal_column] = ((uint16_t)c) | ((uint16_t)terminal_color) << 8;
     if(++terminal_column == VGA_WIDTH) {

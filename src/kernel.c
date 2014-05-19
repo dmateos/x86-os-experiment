@@ -18,7 +18,7 @@ uint32_t tick;
 
 static void timer_cb(struct registers r) {
   tick++;
-  io_printf("tick %d\n", tick);
+  io_printf("tick %d\r", tick);
 }
 
 void init_timer(uint32_t freq) {
@@ -39,13 +39,10 @@ void kernel_main() {
   
   asm volatile ("int $0x3");
   asm volatile ("int $0x3");
-  asm volatile ("int $0x4");
+  asm volatile ("sti");
 
   io_printf("hello world\n");
 
   init_timer(5000);
 
-  while(true) {
-
-  }
 }
