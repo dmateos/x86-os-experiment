@@ -25,11 +25,11 @@ void gdt_initialize() {
   gp.limit = (sizeof(struct gdt_entry) * 5) -1;
   gp.base = (unsigned int)&gdt;
 
-  gdt_set_gate(0, 0, 0, 0, 0);
-  gdt_set_gate(1, 0x0, 0xFFFFFFFF, 0x9A, 0xCF);
-  gdt_set_gate(2, 0x0, 0xFFFFFFFF, 0x92, 0xCF);
-  gdt_set_gate(3, 0x0, 0xFFFFFFFF, 0xFA, 0xCF);
-  gdt_set_gate(4, 0x0, 0xFFFFFFFF, 0xF2, 0xCF);
+  gdt_set_gate(0, 0, 0, 0, 0);                  // null
+  gdt_set_gate(1, 0x0, 0xFFFFFFFF, 0x9A, 0xCF); // Kernel code
+  gdt_set_gate(2, 0x0, 0xFFFFFFFF, 0x92, 0xCF); // Kernel data
+  gdt_set_gate(3, 0x0, 0xFFFFFFFF, 0xFA, 0xCF); // User mode code
+  gdt_set_gate(4, 0x0, 0xFFFFFFFF, 0xF2, 0xCF); // User mode data
 
   gdt_flush();
 }

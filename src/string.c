@@ -42,5 +42,5 @@ void itoa(int value, char* result, int base) {
 }
 
 void *memset(void *b, int c, size_t len) {
-
+  return NULL;
 }

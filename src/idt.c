@@ -57,17 +57,20 @@ void idt_initialize() {
 }
 
 void isr_handler(struct registers r) {
-  io_printf("handled interupt! %h\n", r.int_no);
+  io_printf("interupt %h\n", r.int_no);
   
   switch(r.int_no) {
     case 0x03:
-      io_printf("breakpoint exception, error: %h\n", r.err_code);
+      io_printf("breakpoint exception, error: %h (%d)\n", r.err_code, r.err_code);
       break;
     case 0x08:
-      io_printf("double fault, error: %h\n", r.err_code);
+      io_printf("double fault, error: %h (%d)\n", r.err_code, r.err_code);
       break;
     case 0xd:
-      io_printf("general protection fault, error: %h\n", r.err_code);
+      io_printf("general protection fault, error: %h(%d) \n", r.err_code, r.err_code);
+      break;
+    default:
+      io_printf("unhandled!!!, error: %h (%d)\n", r.err_code, r.err_code);
       break;
   }
 }

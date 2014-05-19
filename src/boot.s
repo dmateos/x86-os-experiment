@@ -53,8 +53,8 @@ idt_load:
 # handler which is also defined in C
 isr_common_stub:
   pusha           # Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
-  mov %ds, %ax    # Lower 16-bits of eax = ds.
-  push %eax       # Save the data segment descriptor
+  movw %ds, %ax    # Lower 16-bits of eax = ds.
+  pushl %eax       # Save the data segment descriptor
 
   movw $0x10, %ax  # load the kernel data segment descriptor
   movw %ax, %ds
@@ -64,14 +64,14 @@ isr_common_stub:
 
   call isr_handler
 
-  pop %eax        # reload the original data segment descriptor
+  popl %eax        # reload the original data segment descriptor
   movw %ax, %ds
   movw %ax, %es
   movw %ax, %fs
   movw %ax, %gs
 
   popa            # Pops edi,esi,ebp...
-  add $8, %esp     # Cleans up the pushed error code and pushed ISR number
+  addl $8, %esp     # Cleans up the pushed error code and pushed ISR number
   sti
   iret            # pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
 
