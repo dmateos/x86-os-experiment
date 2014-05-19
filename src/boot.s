@@ -93,6 +93,18 @@ isr_common_stub:
     jmp isr_common_stub
 .endm
 
+.macro irq irq_num=0, isr_num=0
+  .global irq\irq_num
+  irq\irq_num:
+    cli
+    push $0
+    push $\isr_num
+    jmp irq_command_stub
+.endm
+
+irq_command_stub:
+  ret
+
 # Use the above macros to generate a bunch of isr methods, one for each
 # interrupt
 isr_noerrorcode 0
@@ -128,4 +140,20 @@ isr_noerrorcode 29
 isr_noerrorcode 30
 isr_noerrorcode 31
 
+irq 0,32
+irq 1,33
+irq 2,34
+irq 3,35
+irq 4,36
+irq 5,37
+irq 6,38
+irq 7,39
+irq 8,40
+irq 9,41
+irq 10,42
+irq 11,43
+irq 12,44
+irq 13,45
+irq 14,46
+irq 15,47
 
