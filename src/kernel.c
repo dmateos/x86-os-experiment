@@ -37,12 +37,9 @@ void kernel_main() {
   gdt_initialize();
   idt_initialize();
   
-  asm volatile ("int $0x3");
-  asm volatile ("int $0x3");
   asm volatile ("sti");
 
-  io_printf("hello world\n");
-
+  asm volatile ("int $0x3");
   init_timer(5000);
-
+  asm volatile ("int $0x3");
 }

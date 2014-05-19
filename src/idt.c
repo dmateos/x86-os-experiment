@@ -62,6 +62,7 @@ void idt_initialize() {
   idt_set_gate(30, (uint32_t)isr30, 0x08, 0x8E);
   idt_set_gate(31, (uint32_t)isr31, 0x08, 0x8E);
 
+  io_printf("installing irq table\n");
   idt_set_gate(32, (uint32_t)irq0, 0x08, 0x8E);
   idt_set_gate(33, (uint32_t)irq1, 0x08, 0x8E);
   idt_set_gate(34, (uint32_t)irq2, 0x08, 0x8E);
@@ -79,26 +80,25 @@ void idt_initialize() {
   idt_set_gate(46, (uint32_t)irq14, 0x08, 0x8E);
   idt_set_gate(47, (uint32_t)irq15, 0x08, 0x8E);
 
-  io_printf("idt set gates 0-31\n");
   idt_load();
 }
 
 void isr_handler(struct registers r) {
   switch(r.int_no) {
     case 0x03:
-      io_printf("%h breakpoint exception, error: %h (%d)\n", r.int_no, r.err_code, r.err_code);
+      io_printf("interrupt(%h) breakpoint exception, error: %h (%d)\n", r.int_no, r.err_code, r.err_code);
       break;
     case 0x04:
-      io_printf("%h overflow exception, error: %h (%d)\n", r.int_no, r.err_code, r.err_code);
+      io_printf("interrupt(%h) overflow exception, error: %h (%d)\n", r.int_no, r.err_code, r.err_code);
       break;
     case 0x08:
-      io_printf("%h double fault, error: %h (%d)\n", r.int_no, r.err_code, r.err_code);
+      io_printf("interrupt(%h) double fault, error: %h (%d)\n", r.int_no, r.err_code, r.err_code);
       break;
     case 0xd:
-      io_printf("%h general protection fault, error: %h(%d) \n", r.int_no, r.err_code, r.err_code);
+      io_printf("interrupt(%h) general protection fault, error: %h(%d) \n", r.int_no, r.err_code, r.err_code);
       break;
     default:
-      io_printf("%h unhandled!!!, error: %h (%d)\n", r.int_no, r.err_code, r.err_code);
+      io_printf("interurpt(%h) unhandled!!!, error: %h (%d)\n", r.int_no, r.err_code, r.err_code);
       break;
   }
 }

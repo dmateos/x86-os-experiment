@@ -14,7 +14,7 @@ void gdt_set_gate(int32_t num, uint32_t base, uint32_t limit, uint8_t access, ui
   gdt[num].granularity |= (gran & 0xF0);
   gdt[num].access = access;
 
-  io_printf("gdt set gate\n");
+  io_printf("gdt set gate %h %h %h\n", num, base, limit);
 }
 
 extern void gdt_flush();
